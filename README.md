@@ -1,8 +1,11 @@
-# Board projet, visualisateur 3D
+# Tableau de pilotage du projet, visualisateur 3D
 
-Le Board projet Theodo présenté comme un objet manipulable, dans l'esprit des
-visualisateurs produit des sites e-commerce. On fait tourner le panneau à la
-souris, on zoome, on clique sur une feuille pour ouvrir son standard.
+Le tableau de pilotage projet présenté comme un objet manipulable, dans l'esprit
+des visualisateurs produit des sites e-commerce. On fait tourner le panneau à la
+souris, on zoome, on clique sur une fiche pour ouvrir son détail.
+
+Les textes sont rédigés pour un client qui ne connaît pas le vocabulaire Lean.
+La correspondance avec les standards internes se trouve en fin de document.
 
 Quatre fichiers statiques, aucune étape de build, aucun asset binaire. Toutes
 les textures sont générées à l'exécution en Canvas 2D.
@@ -37,7 +40,7 @@ au premier chargement.
 | `main.js` | Scène, textures Canvas, mise en page, raycasting, animations, accessibilité |
 
 `main.js` est découpé en 17 sections numérotées, dans l'ordre de lecture :
-constantes et mise en page, utilitaires Canvas, texture d'une feuille, texture
+constantes et mise en page, utilitaires Canvas, texture d'une fiche, texture
 du recto, texture du verso, calcul de la mise en page, scène, construction du
 panneau, cadrage et vues, interactions, panneau HTML, barre d'outils,
 accessibilité clavier, événements, boucle de rendu, repli, démarrage.
@@ -51,45 +54,42 @@ export const board = {
   title, intention, subtitle,
   header: { promise, team, spa },
   pillars: [{ id, label, color, objectives: [], standards: [] }],
-  errors: [],
-  misconceptions: [{ misconception, reframe }],
-  goodBoard: [],
+  errors: [],      // verso, panneau Points de vigilance
+  goodBoard: [],   // verso, encadré Les signes d'un tableau utile
+  usage: [{ question, answer }], // verso, panneau Comprendre son utilisation
 };
 ```
 
-### Champs d'un standard
+### Champs d'une fiche
 
 | Champ | Usage |
 |---|---|
-| `id` | Identifiant unique, sert à placer la feuille sur le board. Obligatoire |
-| `boardTitle` | Titre imprimé sur la feuille, en français. Ne correspond pas toujours au nom Notion |
-| `title` | Titre exact de la page Notion, affiché dans le panneau s'il diffère |
-| `cadence` | Badge de rythme sur la feuille, `Daily`, `Weekly`, `Monthly`. Facultatif |
-| `intent` | Bloc Intent du standard. Affiché en exergue dans le panneau |
-| `bullets` | Puces imprimées sur la feuille. 6 lignes au maximum, voir ci-dessous |
+| `id` | Identifiant unique, sert à placer la fiche sur le tableau. Obligatoire |
+| `boardTitle` | Titre imprimé sur la fiche, repris dans l'infobulle et le panneau |
+| `cadence` | Badge de rythme, `Chaque jour`, `Chaque semaine`, `Chaque mois`. Facultatif |
+| `intent` | Réponse à « À quoi sert cette fiche ? ». Affichée en exergue dans le panneau |
+| `bullets` | Puces imprimées sur la fiche. 6 lignes au maximum, voir ci-dessous |
 | `details` | Sections `{ heading, items }` affichées dans le panneau, sans limite |
 | `note` | Précision affichée sous l'intention. Facultatif |
-| `notionUrl` | Lien ouvert par le bouton en bas du panneau. Absent de cette version publique |
 
 ### Régler la longueur des textes
 
-Les feuilles n'affichent que l'essentiel, le détail va dans le panneau HTML.
+Les fiches n'affichent que l'essentiel, le détail va dans le panneau HTML.
 
 - **`bullets`** : 6 lignes au maximum, et le rendu réduit encore ce budget si la
-  feuille est petite. Une puce trop longue est coupée sur 2 lignes puis
+  fiche est petite. Une puce trop longue est coupée sur 2 lignes puis
   tronquée. Visez 60 caractères par puce.
 - **`intent`** : pas de limite, le panneau défile.
-- **`misconceptions`** : le tableau du verso ajuste automatiquement son corps de
-  texte pour tenir dans le panneau. Ajouter des lignes réduit la taille du
-  texte, en dessous de huit lignes environ il devient difficile à lire de loin.
-- **`errors`** et **`goodBoard`** : gardez des phrases courtes, le panneau du
-  verso ne s'adapte pas en hauteur.
+- **`usage`**, **`errors`** et **`goodBoard`** : les deux panneaux du verso
+  ajustent automatiquement leur corps de texte pour tenir dans la place
+  disponible. Ajouter des lignes réduit la taille du texte, au delà d'une
+  dizaine de lignes par panneau il devient difficile à lire de loin.
 
-## Ajouter ou retirer une feuille
+## Ajouter ou retirer une fiche
 
 Deux étapes.
 
-**1. Le contenu.** Ajoutez un objet dans `standards` du pilier concerné, dans
+**1. Le contenu.** Ajoutez un objet dans `standards` du thème concerné, dans
 `content.js`, avec au minimum `id`, `boardTitle`, `intent` et `bullets`.
 
 **2. La place sur le board.** Ouvrez `main.js`, section 1, et ajoutez l'`id`
@@ -105,35 +105,35 @@ const BLOCKS = {
 };
 ```
 
-Chaque bloc pilier est une liste de colonnes, chaque colonne une liste d'id de
+Chaque bloc de thème est une liste de colonnes, chaque colonne une liste d'id de
 haut en bas. La règle de mise en page est simple :
 
 > Dans un bloc, **chaque colonne remplit toute la hauteur disponible**. La
-> largeur de la colonne découle de la hauteur de ses feuilles, au format A4
+> largeur de la colonne découle de la hauteur de ses fiches, au format A4
 > paysage.
 
-Une colonne à une seule feuille donne donc une grande feuille, c'est ce qui
-produit le grand Kanban. Une colonne à trois feuilles donne trois feuilles plus
-petites. Si le bloc déborde en largeur, tout est réduit proportionnellement,
+Une colonne à une seule fiche donne donc une grande fiche, c'est ce qui produit
+la grande fiche Parcours des fonctionnalités. Une colonne à trois fiches donne
+trois fiches plus petites. Si le bloc déborde en largeur, tout est réduit proportionnellement,
 la mise en page ne casse jamais.
 
 Conséquences pratiques :
 
-- Ajouter une feuille dans une colonne existante rétrécit toutes les feuilles
-  de cette colonne. Au delà de trois par colonne le texte devient petit.
+- Ajouter une fiche dans une colonne existante rétrécit toutes les fiches de
+  cette colonne. Au delà de trois par colonne le texte devient petit.
 - Ajouter une colonne au bloc rétrécit les colonnes voisines.
-- Retirer une feuille agrandit automatiquement celles qui restent.
+- Retirer une fiche agrandit automatiquement celles qui restent.
 - Un `id` présent dans `content.js` mais absent de `BLOCKS` est placé
   automatiquement dans la colonne la plus courte du bloc, avec un message dans
   la console.
 - Un `id` présent dans `BLOCKS` mais absent de `content.js` est ignoré sans
   erreur.
 
-### Ajouter un pilier
+### Ajouter un thème
 
 Ajoutez l'objet dans `pillars`, puis une entrée dans `BLOCKS` avec un `row`
 (`a` ou `b`) et un `col` (`l` ou `r`). Les quatre emplacements sont occupés par
-les quatre piliers actuels, un cinquième pilier demande de revoir la grille
+les quatre thèmes actuels, un cinquième thème demande de revoir la grille
 `LAYOUT.rows` et `LAYOUT.cols`, section 1 de `main.js`.
 
 ## Réglages du rendu
@@ -142,16 +142,16 @@ En tête de `main.js` :
 
 | Constante | Effet |
 |---|---|
-| `BOARD_RATIO` | Ratio du panneau. `3 / 2` par défaut, mettez `4 / 3` pour coller aux proportions du board physique |
+| `BOARD_RATIO` | Ratio du panneau. `3 / 2` par défaut, mettez `4 / 3` pour coller aux proportions du tableau physique |
 | `BOARD_W`, `BOARD_D` | Largeur et épaisseur du panneau, en mètres |
-| `SHEET_LIFT` | Hauteur de soulèvement d'une feuille au survol |
+| `SHEET_LIFT` | Hauteur de soulèvement d'une fiche au survol |
 | `PALETTE` | Couleurs du panneau, des bandeaux et des étiquettes |
 | `LAYOUT` | Grille du recto, hauteurs de bandeaux, gouttières |
 | `IDLE_DELAY` | Délai d'inactivité avant la rotation automatique, 8 s |
 
-Les couleurs de pilier, définies dans `content.js`, ne servent qu'à
+Les couleurs de thème, définies dans `content.js`, ne servent qu'à
 l'interaction : liseré au survol, accent du panneau, anneau de focus. Les
-bandeaux imprimés restent orange, comme sur le board physique.
+bandeaux imprimés restent orange, comme sur le tableau physique.
 
 ## Interactions
 
@@ -159,20 +159,20 @@ bandeaux imprimés restent orange, comme sur le board physique.
 |---|---|
 | Tourner | Glisser à la souris, 360 degrés à l'horizontale, plus ou moins 75 degrés à la verticale |
 | Zoomer | Molette, ou pincement sur mobile |
-| Survoler | La feuille se soulève, prend le liseré de son pilier, une infobulle suit la souris |
-| Ouvrir | Clic ou touche Entrée, la caméra cadre la feuille en 700 ms et le panneau s'ouvre |
-| Revenir | Bouton Retour au board, touche Échap, ou clic dans le vide |
-| Naviguer au clavier | Tab entre les 8 feuilles, Entrée pour ouvrir. Le focus est dessiné sur la feuille en 3D |
+| Survoler | La fiche se soulève, prend le liseré de son thème, une infobulle suit la souris |
+| Ouvrir | Clic ou touche Entrée, la caméra cadre la fiche en 700 ms et le panneau s'ouvre |
+| Revenir | Bouton Retour au tableau, touche Échap, ou clic dans le vide |
+| Naviguer au clavier | Tab entre les 8 fiches, Entrée pour ouvrir. Le focus est dessiné sur la fiche en 3D |
 
 ## Choix techniques à connaître
 
-- **Feuilles en A4 paysage.** Le board physique utilise des feuilles paysage,
+- **Fiches en A4 paysage.** Le tableau physique utilise des feuilles paysage,
   pas portrait. Les textures sont donc en paysage, dimensionnées à partir de la
-  largeur réelle de chaque feuille, environ 7 pixels par millimètre, plafonnées
+  largeur réelle de chaque fiche, environ 7 pixels par millimètre, plafonnées
   à 2400 pixels de large.
 - **Typographie en millimètres.** `makeSheetTexture` dessine en millimètres
-  réels de la feuille. Le texte garde ainsi la même taille physique sur toutes
-  les feuilles, y compris sur le grand Kanban.
+  réels de la fiche. Le texte garde ainsi la même taille physique sur toutes
+  les fiches, y compris sur la plus grande.
 - **Ombres.** `PCFSoftShadowMap` est déprécié puis retiré des versions récentes
   de Three.js. Le rendu utilise `VSMShadowMap`, son remplaçant, qui accepte un
   vrai flou via `shadow.radius` et `shadow.blurSamples`. Une ombre de contact
@@ -184,24 +184,34 @@ bandeaux imprimés restent orange, comme sur le board physique.
   première manipulation et respectueuse de `prefers-reduced-motion`. Le bouton
   Réinitialiser la relance.
 - **Cibles clavier.** Huit boutons transparents sont positionnés sur la
-  projection écran des feuilles à chaque frame. Ils sont en `pointer-events:
+  projection écran des fiches à chaque frame. Ils sont en `pointer-events:
   none`, la souris est gérée uniquement par le canvas.
 
-## Sources du contenu
+## Correspondance avec les standards internes
 
-Cette version est publique. Les liens vers les pages Notion internes ont été
-retirés de `content.js`, seuls les titres de standards restent. Pour une
-diffusion interne, réajoutez une clé `notionUrl` sur un standard et le bouton
-"Ouvrir le standard dans Notion" réapparaît dans le panneau.
+Les textes du site sont rédigés pour un client. Cette table permet de retrouver
+le standard d'origine de chaque fiche, pour la documentation interne.
 
-Les intentions des 8 standards proviennent du bloc Intent de leur page Notion
-Theodo Academy. Les erreurs types, les misconceptions et les repères d'un bon
-board proviennent de la page Board projet, dans Theodo Obeya.
+| N° | Fiche affichée | Standard d'origine | Thème affiché |
+|---|---|---|---|
+| 1 | Votre retour d'expérience | Questionnaire | Comprendre vos besoins |
+| 2 | Priorités du produit | Product architecture | Comprendre vos besoins |
+| 3 | Point d'avancement | Daily Mail, section User Story Takt | Livrer avec fiabilité |
+| 4 | Suivi des anomalies | Defect Visualization | Livrer avec fiabilité |
+| 5 | Parcours des fonctionnalités | The feature kanban | Livrer avec fiabilité |
+| 6 | Outils et environnement technique | Tech Working Conditions | Faciliter le travail technique |
+| 7 | Problèmes et actions | Dantotsu and Problem Solving | Résoudre les problèmes |
+| 8 | Prévenir les problèmes récurrents | Weak Point Management | Résoudre les problèmes |
 
-Un point à connaître : **User Stories Takt** n'a pas de page Notion dédiée,
-c'est une section du standard **Daily Mail**. La feuille porte le titre du
-board, le panneau affiche le titre Notion et l'intention du Daily Mail.
+Les quatre thèmes reprennent les quatre principes du Lean Tech Manifesto :
+Comprendre vos besoins pour Value for the Customer, Livrer avec fiabilité pour
+Right-first-time and Just-in-time, Faciliter le travail technique pour
+Tech-enabled Network of Teams, Résoudre les problèmes pour Build a Learning
+Organization.
 
-La bande d'en-tête, nom de projet, promesse, équipe et Single Point of
-Accountability, contient des valeurs génériques. Remplacez-les dans
-`content.js`, clé `header`.
+Les liens vers les pages internes ont été retirés, le site étant public. Pour
+une diffusion interne, réajoutez une clé `notionUrl` sur une fiche et restaurez
+le bouton correspondant dans `renderPanel`, section 11 de `main.js`.
+
+La bande d'en-tête, projet, engagements, équipe et responsable, contient des
+valeurs génériques. Remplacez-les dans `content.js`, clé `header`.

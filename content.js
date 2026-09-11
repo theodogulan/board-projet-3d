@@ -1,124 +1,116 @@
 /**
- * Contenu du Board projet.
+ * Contenu du Tableau de pilotage du projet.
  *
  * Ce fichier est le seul à modifier pour changer les textes. Aucun code 3D ici.
- * Voir le README pour ajouter ou retirer une feuille sans casser la mise en page.
+ * Voir le README pour ajouter ou retirer une fiche sans casser la mise en page.
  *
- * Version publique. Les liens `notionUrl` vers les pages Notion internes ont
- * été retirés, seuls les titres de standards restent. Pour une diffusion
- * interne, réajoutez une clé `notionUrl` sur un standard et le bouton
- * "Ouvrir le standard dans Notion" réapparaît dans le panneau.
- *
- * Les intentions des standards sont reprises du bloc "Intent" de chaque page
- * Notion Theodo Academy.
- *
- * `boardTitle` est le titre imprimé sur la feuille, traduit en français.
- * `title` reste le titre officiel du standard dans Notion, en anglais, et
- * s'affiche dans le panneau quand il diffère. Ne traduisez pas `title`, c'est
- * lui qui fait le lien avec la source.
+ * Version destinée au client. Les intitulés internes et les références aux
+ * standards Lean Tech ne sont pas affichés, la table de correspondance entre
+ * les 8 fiches et les standards d'origine se trouve dans le README.
  */
 
 export const board = {
-  title: "Board projet",
+  title: "Tableau de pilotage du projet",
 
   intention:
-    "Utiliser un support physique de visual management commun pour rendre les problèmes visibles plus tôt, apprendre plus vite ensemble autour des standards clés du Lean Tech, afin d'aider les équipes projet à mieux décider.",
+    "Ce tableau aide notre équipe à suivre vos priorités, l'avancement du projet et la qualité du produit. Il permet de repérer les difficultés tôt et de décider des actions nécessaires pour tenir nos engagements.",
 
-  subtitle:
-    "Rendre visibles pour l'équipe les problèmes qui vont l'empêcher de livrer la promesse, puis les analyser pour prendre de meilleures décisions.",
+  subtitle: "Repérer les risques, résoudre les problèmes et tenir nos engagements.",
 
   /**
-   * Bande d'en-tête du recto. Contenu volontairement générique.
-   * Remplacez les valeurs par celles de votre projet.
+   * Bande d'en-tête du recto. Contenu à renseigner pour chaque projet.
+   * `members` contient les initiales dessinées dans les pastilles.
    */
   header: {
     promise: {
-      label: "Project Name / Promise",
+      label: "Projet et engagements",
       project: "Nom du projet",
-      text: "La promesse faite au client, avec son périmètre, son niveau de qualité, sa date et son budget.",
+      text: "Le résultat attendu, les fonctionnalités prévues, le niveau de qualité, la date de livraison et le budget convenus avec vous.",
     },
     team: {
-      label: "Team",
-      members: ["PM", "TL", "Dev", "Dev", "Design"],
+      label: "Équipe projet",
+      // Responsable produit, responsable technique, développeurs, designer
+      members: ["RP", "RT", "D1", "D2", "DS"],
     },
     spa: {
-      label: "Single Point of Accountability",
-      members: ["SPA"],
+      label: "Responsable des engagements",
+      // Personne responsable du respect des engagements du projet
+      members: ["PN"],
     },
   },
 
   /**
-   * Les 4 piliers du Lean Tech Manifesto.
+   * Les 4 thèmes du tableau.
    * `color` sert uniquement d'accent d'interaction, survol, focus et panneau.
-   * Les bandeaux imprimés sur le board restent orange, comme l'objet physique.
+   * Les bandeaux imprimés restent orange, comme l'objet physique.
    */
   pillars: [
     {
       id: "value",
-      label: "Value for the Customer",
+      label: "Comprendre vos besoins",
       color: "#3E7BFA",
-      objectives: ["Rendre visible la compréhension de la valeur créée pour le client."],
+      objectives: [
+        "Comprendre ce qui compte pour vous et pour les utilisateurs, afin de concentrer les efforts sur les améliorations les plus utiles.",
+      ],
       standards: [
         {
           id: "questionnaire",
-          boardTitle: "Questionnaire",
-          title: "Questionnaire",
-          cadence: "Weekly",
+          boardTitle: "Votre retour d'expérience",
+          cadence: "Chaque semaine",
           intent:
-            "Rituel pour apprendre les préférences et les frustrations du client, afin d'identifier des opportunités d'amélioration et d'augmenter sa satisfaction.",
+            "Recueillir votre avis sur ce que vous avez vécu : ce qui vous a satisfait, ce qui vous a gêné et ce qui compte le plus pour vous. Ces échanges nous aident à choisir les améliorations à apporter.",
           bullets: [
-            "Écouter les préférences et les frustrations du client",
-            "Questions ouvertes, écoute active, silences respectés",
-            "Noter les verbatim entre guillemets, sans les analyser",
-            "Un répondant à la fois, jamais en groupe",
-            "Analyser le retour, quelle que soit la note",
+            "Comprendre ce qui vous satisfait ou vous gêne.",
+            "Poser des questions ouvertes et laisser le temps de répondre.",
+            "Noter vos mots exacts, sans les interpréter.",
+            "Échanger avec une personne à la fois.",
+            "Analyser chaque retour, quelle que soit la note donnée.",
           ],
           details: [
             {
-              heading: "Erreurs types",
+              heading: "Points de vigilance",
               items: [
-                "Dérouler les questions de façon mécanique au lieu d'être dans l'échange.",
-                "Demander comment s'améliorer au lieu de comprendre ce qui n'a pas plu. Un bon questionnaire porte sur le passé, pas sur le futur.",
-                "Réagir à chaud aux retours au lieu d'écouter l'impact du problème pour le client.",
-                "Interroger plusieurs personnes en même temps, elles s'influencent.",
-                "Reprendre les sujets déjà traités en revue, le client a l'impression de se répéter.",
+                "Enchaîner les questions sans laisser place à la discussion.",
+                "Demander des idées de solution avant d'avoir compris une expérience concrète.",
+                "Justifier immédiatement une difficulté au lieu d'écouter ses conséquences pour vous.",
+                "Interroger plusieurs personnes ensemble, au risque qu'elles influencent leurs réponses.",
+                "Faire répéter des sujets déjà abordés lors d'un point projet, sans question nouvelle.",
               ],
             },
             {
-              heading: "Mode opératoire",
+              heading: "Comment l'équipe s'y prend",
               items: [
-                "Avant, expliquer l'intention, caler un créneau régulier, avoir en tête les préférences clés du client.",
-                "Pendant, pratiquer l'écoute active, poser des questions ouvertes, utiliser le mirroring.",
-                "Après, relire les notes, distinguer les verbatim des interprétations, supprimer le superflu.",
-                "Analyser le questionnaire et enregistrer l'analyse.",
+                "Avant l'échange, expliquer son objectif, convenir d'un rendez-vous régulier et relire vos priorités connues.",
+                "Pendant l'échange, poser des questions ouvertes, laisser des silences et reprendre certains de vos mots pour vous inviter à préciser votre pensée.",
+                "Après l'échange, distinguer vos propos exacts des interprétations de l'équipe et conserver les éléments utiles.",
+                "Analyser les retours et garder une trace des conclusions.",
               ],
             },
           ],
         },
         {
           id: "product-architecture",
-          boardTitle: "Architecture produit",
-          title: "Product architecture",
-          cadence: "Monthly",
+          boardTitle: "Priorités du produit",
+          cadence: "Chaque mois",
           intent:
-            "Construire un diagramme d'architecture produit est un moyen pour le product manager de négocier avec les parties prenantes où mettre l'énergie de l'équipe, pour atteindre l'adoption et les objectifs business du produit.",
+            "Relier les attentes des utilisateurs aux objectifs de votre entreprise pour décider où concentrer les efforts. Cette vue aide à choisir les priorités d'un produit utile, que les utilisateurs auront envie d'adopter.",
           bullets: [
-            "Niveau 1, Product Radar",
-            "Niveau 2, Quality Function Deployment",
-            "Négocier où mettre l'énergie de l'équipe",
-            "Segmenter par profil, on sait ce qui compte et pour qui",
-            "Préférences clés et performances critiques, pas des features",
+            "Une vue d'ensemble des attentes prioritaires.",
+            "Le lien entre ces attentes et les exigences du produit.",
+            "Des priorités discutées avec les personnes concernées.",
+            "Des besoins distingués selon les profils d'utilisateurs.",
+            "Ce que le produit doit permettre de réussir et les critères pour le vérifier.",
           ],
           details: [
             {
-              heading: "Erreurs types",
+              heading: "Points de vigilance",
               items: [
-                "Rétro-concevoir l'architecture produit à partir du backlog de features.",
-                "Attendre d'avoir parlé aux utilisateurs pour ébaucher une architecture produit. La discovery sert à casser ses idées reçues, pas à savoir quoi faire.",
-                "Écrire les préférences clés comme des features ou comme une accroche marketing.",
-                "Lister toutes les préférences d'un profil, 10 préférences pour un seul profil.",
-                "Ne pas segmenter, on ne sait plus ce qui est important pour qui.",
-                "Traiter les performances critiques comme un résultat et non comme un moyen.",
+                "Partir uniquement de la liste des fonctionnalités déjà prévues pour en déduire les besoins.",
+                "Attendre les entretiens utilisateurs pour formuler les premières hypothèses : celles-ci servent de point de départ, puis sont confrontées aux retours du terrain.",
+                "Décrire une attente par une solution déjà choisie ou par une formule publicitaire trop vague.",
+                "Accumuler les attentes sans faire ressortir les quelques priorités de chaque profil.",
+                "Mélanger les profils d'utilisateurs, au point de ne plus savoir ce qui compte pour qui.",
+                "Prendre une performance technique pour un objectif en soi, sans expliquer à quel besoin elle répond.",
               ],
             },
           ],
@@ -128,86 +120,81 @@ export const board = {
 
     {
       id: "rft-jit",
-      label: "Right-first-time and Just-in-time",
+      label: "Livrer avec fiabilité",
       color: "#1FA97A",
       objectives: [
-        "Rendre visible l'avancement du travail.",
-        "Détecter plus tôt les dérives, blocages ou défauts de flux.",
-        "Soutenir un delivery plus fluide et plus fiable.",
+        "Suivre ce qui avance, détecter les retards et les anomalies, et faciliter le travail entre les équipes pour livrer au rythme prévu avec la qualité attendue.",
       ],
       standards: [
         {
           id: "user-stories-takt",
-          boardTitle: "Takt des user stories",
-          title: "Daily Mail",
-          cadence: "Daily",
+          boardTitle: "Point d'avancement",
+          cadence: "Chaque jour",
           note:
-            "Le takt des user stories est suivi à l'intérieur du standard Daily Mail, qui n'a pas de page Notion dédiée.",
+            "Ce suivi s'appuie sur un court message quotidien pendant les périodes qui nécessitent une information rapprochée.",
           intent:
-            "Construire la confiance avec le client en montrant que l'équipe Theodo livre de la valeur vite, ou en expliquant clairement comment elle traite les blocages de façon proactive.",
+            "Vous donner une vision claire de ce qui est terminé, de ce qui bloque et des actions engagées. L'objectif est que vous sachiez où en est le projet et comment l'équipe traite les difficultés.",
           bullets: [
-            "Envoyé par le Product Manager, propriétaire du delivery du sprint",
-            "Les 4 premières semaines, les 4 dernières, autour des jalons",
-            "Aussi en cas de crise de satisfaction client",
-            "Court et net, pour situer où en est le projet",
-            "Pas de surprise dans la boîte mail, un impact roadmap s'annonce par téléphone",
+            "Un point envoyé par le responsable produit, chargé des livraisons prévues sur la période.",
+            "Un suivi quotidien durant les quatre premières et les quatre dernières semaines, ainsi qu'autour des étapes clés.",
+            "Un suivi renforcé également en cas d'insatisfaction importante.",
+            "Un message court : ce qui est terminé, ce qui bloque, ce que l'équipe fait pour avancer.",
+            "Tout impact sur le calendrier est annoncé de vive voix avant l'envoi du message.",
           ],
           details: [
             {
-              heading: "Mise en pratique",
+              heading: "Comment l'équipe s'y prend",
               items: [
-                "Anticiper, si un ticket n'est pas terminé en fin de journée, faire le DPS tout de suite pour que les apprentissages soient prêts.",
-                "Rester court et précis, l'objectif est de construire la confiance et de montrer où en est le projet.",
-                "Penser comme le client, seules les bonnes surprises arrivent par mail.",
-                "S'améliorer en continu, une réponse du client indique ce qui a fonctionné.",
+                "Dès qu'un travail prévu reste inachevé en fin de journée, en analyser les raisons et préparer les actions à engager.",
+                "Résumer les faits utiles pour comprendre l'avancement du projet.",
+                "Vous contacter directement lorsqu'une difficulté remet en cause les engagements ou le calendrier.",
+                "Tenir compte de vos réponses pour améliorer la clarté et l'utilité des points suivants.",
               ],
             },
           ],
         },
         {
           id: "defects-visualization",
-          boardTitle: "Visualisation des défauts",
-          title: "Defect Visualization",
-          cadence: "Weekly",
+          boardTitle: "Suivi des anomalies",
+          cadence: "Chaque semaine",
           intent:
-            "Rendre visibles les défauts chroniques et fréquents pour concentrer l'équipe sur les parties les plus fragiles du système, et créer des moments de kaizen.",
+            "Repérer les anomalies fréquentes ou persistantes et les parties du produit les plus touchées. L'équipe peut ainsi concentrer ses efforts là où la qualité doit progresser en priorité.",
           bullets: [
-            "Rendre visibles les défauts chroniques et fréquents",
-            "Repérer les parties les plus fragiles du système",
-            "Créer des moments de kaizen à partir des défauts",
-            "Alimente le Weak Point Management",
+            "Recenser les anomalies fréquentes ou persistantes.",
+            "Repérer les parties du produit les plus fragiles.",
+            "Choisir les améliorations prioritaires à partir des faits.",
+            "Transmettre les problèmes récurrents à la fiche « Prévenir les problèmes récurrents ».",
           ],
           details: [
             {
-              heading: "Ce que la feuille montre",
+              heading: "Ce que montre la fiche",
               items: [
-                "Les défauts regroupés par zone du système.",
-                "Leur fréquence et leur caractère chronique.",
-                "Les zones qui concentrent le plus de défauts, cibles prioritaires de kaizen.",
+                "Les anomalies regroupées par partie du produit ou du système technique.",
+                "Leur fréquence et leur répétition dans le temps.",
+                "Les zones les plus touchées, à traiter en priorité.",
               ],
             },
           ],
         },
         {
           id: "feature-kanban",
-          boardTitle: "Kanban",
-          title: "The feature kanban",
+          boardTitle: "Parcours des fonctionnalités",
           intent:
-            "Faire ressortir clairement les problèmes de travail d'équipe qui nous empêchent de livrer les features plus vite.",
+            "Voir comment chaque fonctionnalité progresse d'une équipe à l'autre, où elle attend et ce qui la bloque. Cette vue aide les équipes à mieux se coordonner pour réduire les délais de livraison.",
           bullets: [
-            "Une colonne par équipe, avec ses membres",
-            "Work in Progress, points de contrôle qualité",
-            "Ready for Next Team, puis Done",
-            "La courbe d'avancement des features dans le temps",
-            "Sert à voir les problèmes, pas à suivre l'activité",
+            "Une colonne par équipe, avec les personnes concernées.",
+            "Les travaux en cours et les contrôles qualité à réaliser.",
+            "Des étapes claires : « Prêt pour l'équipe suivante » et « Terminé ».",
+            "Une courbe de l'avancement des fonctionnalités au fil du temps.",
+            "Les attentes et les blocages qui ralentissent les livraisons.",
           ],
           details: [
             {
-              heading: "Pratiquer",
+              heading: "Exercices pratiques",
               items: [
-                "Simulateur 1, OK ou KO.",
-                "Simulateur 2, choisir ses colonnes.",
-                "Simulateur 3, la pratique de management.",
+                "Exercice 1 : reconnaître un tableau qui aide à repérer les problèmes.",
+                "Exercice 2 : choisir les colonnes adaptées au travail des équipes.",
+                "Exercice 3 : utiliser le tableau pour décider des actions à engager.",
               ],
             },
           ],
@@ -217,47 +204,45 @@ export const board = {
 
     {
       id: "network-of-teams",
-      label: "Tech-enabled Network of Teams",
+      label: "Faciliter le travail technique",
       color: "#F0803C",
       objectives: [
-        "Rendre visible la qualité des conditions de travail techniques.",
-        "Aider l'équipe à progresser sur les conditions qui permettent une meilleure qualité technique et un delivery plus rapide.",
+        "Vérifier que l'équipe dispose des outils et des conditions nécessaires pour développer, vérifier et mettre en ligne le produit efficacement.",
       ],
       standards: [
         {
           id: "tech-working-conditions",
-          boardTitle: "Conditions de travail techniques",
-          title: "Tech Working Conditions",
+          boardTitle: "Outils et environnement technique",
           intent:
-            "Engager l'équipe à maintenir le bon environnement de travail technique pour être efficace sur toute la boucle d'ingénierie, Build, Observe et Ship.",
+            "Réduire les pertes de temps et les risques techniques à chaque étape : développer le produit, surveiller son fonctionnement et mettre les évolutions à disposition des utilisateurs.",
           bullets: [
-            "Build, Observe, Ship, la boucle complète d'ingénierie",
-            "L'équipement et les accès pour être efficace au quotidien",
-            "Une boucle de feedback locale quasi instantanée",
-            "De la visibilité sur la production, des incidents traités avec méthode",
-            "Le code mergé part en production sans friction ni attente",
+            "De bonnes conditions pour développer, surveiller et mettre en ligne le produit.",
+            "Le matériel, les outils et les accès nécessaires au quotidien.",
+            "Une vérification rapide des modifications pendant le développement.",
+            "Une visibilité sur le produit en service et une méthode de traitement des incidents.",
+            "Des mises en ligne rapides et fiables une fois les modifications validées.",
           ],
           details: [
             {
-              heading: "Build",
+              heading: "Développer efficacement",
               items: [
-                "L'équipe a l'équipement et les accès nécessaires au quotidien. Place fixe, écrans, wifi stable, accès aux postes client, VPN. Ère agentique, les développeurs ont accès aux meilleurs modèles.",
-                "La boucle de feedback locale est quasi instantanée. Hot reload sous 150 ms, debug au point d'arrêt, lint et typage immédiats dans l'IDE. Ère agentique, un agent installe le projet, lance les tests et lit les erreurs seul.",
-                "Le code reste lisible, cohérent et sans régression. Style uniforme, couverture de tests suffisante, tests fiables et rapides. Ère agentique, les standards de code alimentent les agents de revue.",
+                "Disposer d'un poste de travail adapté, d'une connexion stable et des accès nécessaires aux outils du projet et aux systèmes du client. Si l'équipe utilise des assistants d'IA, disposer des outils adaptés aux tâches à réaliser.",
+                "Voir rapidement l'effet d'une modification et repérer les erreurs pendant le développement. Si des assistants d'IA interviennent, leur permettre de préparer le projet, de lancer les tests et d'en lire les résultats.",
+                "Garder un code compréhensible et cohérent, avec des tests fiables et rapides qui détectent les effets indésirables des changements. Fournir les mêmes règles de qualité aux développeurs et aux assistants d'IA utilisés pour vérifier le code.",
               ],
             },
             {
-              heading: "Observe",
+              heading: "Surveiller le produit en service",
               items: [
-                "L'équipe voit la production et enquête facilement. Logs exploitables, impact traçable, dashboards à jour. Ère agentique, logs et métriques accessibles aux agents via MCP ou une API dédiée.",
-                "Les incidents sont détectés et traités avec méthode. Alertes configurées, pas de fatigue d'alerte, méthode de traitement définie. Ère agentique, des logs structurés et interrogeables permettent à un agent de poser un diagnostic.",
+                "Disposer d'informations à jour pour comprendre le fonctionnement du produit et l'impact d'un problème sur les utilisateurs. Les outils d'analyse, y compris les assistants d'IA utilisés par l'équipe, doivent pouvoir exploiter les informations nécessaires au diagnostic.",
+                "Détecter les incidents grâce à des alertes utiles et suivre une méthode claire pour les traiter. Conserver des informations structurées pour faciliter la recherche de leur origine.",
               ],
             },
             {
-              heading: "Ship",
+              heading: "Mettre les évolutions en ligne",
               items: [
-                "Le code mergé arrive en production sans friction ni attente. CI/CD rapide, déploiement au moins hebdomadaire, rollback possible. Ère agentique, la CI accepte les contributions d'agents.",
-                "Ce qui part en production a été testé dans un environnement proche de la production, avec des données fidèles au réel. Ère agentique, l'environnement de test est déclenchable par un agent, avec des données anonymisées.",
+                "Pouvoir mettre en ligne les modifications validées sans attente inutile, au moins chaque semaine, et revenir à une version précédente si nécessaire. Soumettre les modifications produites avec l'aide d'une IA aux contrôles de qualité du projet.",
+                "Vérifier les évolutions dans un environnement proche du produit en service, avec des données représentatives de l'usage réel. Si ces vérifications sont confiées à un assistant d'IA, lui permettre de les lancer avec des données anonymisées.",
               ],
             },
           ],
@@ -267,57 +252,54 @@ export const board = {
 
     {
       id: "learning-organization",
-      label: "Building a Learning Organization",
+      label: "Résoudre les problèmes",
       color: "#8B5CF6",
       objectives: [
-        "Faire du projet un lieu d'apprentissage structuré.",
-        "Rendre visibles les problèmes, les contre-mesures et les points faibles à traiter.",
+        "Comprendre les difficultés rencontrées, suivre les actions décidées et partager ce que l'équipe apprend pour améliorer durablement la qualité et les délais.",
       ],
       standards: [
         {
           id: "dantotsu",
-          boardTitle: "Dantotsu et résolution de problèmes",
-          title: "Dantotsu and Problem Solving",
+          boardTitle: "Problèmes et actions",
           intent:
-            "Utiliser les petits problèmes du quotidien pour renforcer la connaissance de l'équipe sur les conditions qui permettent une meilleure qualité et un delivery plus rapide.",
+            "Traiter les difficultés du quotidien en comprenant leurs causes, en décidant d'actions concrètes et en vérifiant leurs effets. Chaque problème traité aide l'équipe à mieux travailler.",
           bullets: [
-            "Partir des petits problèmes du quotidien",
-            "Date et source, défaut, causes, contre-mesures, statut",
-            "Une ligne par problème, tenue à jour",
-            "Renforcer la connaissance de l'équipe, pas clore un ticket",
+            "Partir d'un problème concret rencontré par l'équipe.",
+            "Noter la date, le problème, ses causes, les actions et leur avancement.",
+            "Tenir à jour une ligne par problème.",
+            "Vérifier l'effet des actions et partager ce qui a été appris.",
           ],
           details: [
             {
-              heading: "Colonnes de la feuille",
+              heading: "Colonnes de la fiche",
               items: [
-                "Date et source du problème.",
-                "Défaut constaté.",
+                "Date et origine du signalement.",
+                "Problème constaté.",
                 "Causes identifiées.",
-                "Contre-mesures décidées.",
-                "Statut d'avancement.",
+                "Actions décidées.",
+                "Avancement des actions.",
               ],
             },
           ],
         },
         {
           id: "weak-point-management",
-          boardTitle: "Gestion des points faibles",
-          title: "Weak Point Management",
+          boardTitle: "Prévenir les problèmes récurrents",
           intent:
-            "Détecter les points faibles récurrents issus de Defect Visualization, comprendre pourquoi les défauts persistent malgré les contre-mesures, et traiter les causes racines en répétant la question pourquoi, jusqu'à ce que le défaut ne réapparaisse plus.",
+            "Lorsqu'un problème revient malgré les actions déjà menées, approfondir l'analyse pour comprendre ce qui le provoque. L'objectif est d'agir sur son origine et de vérifier dans le temps qu'il ne réapparaît plus.",
           bullets: [
-            "Détecter les points faibles récurrents",
-            "Partir des défauts rendus visibles",
-            "Comprendre pourquoi ils persistent malgré les contre-mesures",
-            "Remonter aux causes racines par des pourquoi répétés",
-            "Jusqu'à ce que le défaut ne réapparaisse plus",
+            "Repérer les problèmes qui reviennent.",
+            "S'appuyer sur les faits recensés dans le suivi des anomalies.",
+            "Comprendre pourquoi les premières actions n'ont pas suffi.",
+            "Demander « pourquoi ? » à chaque étape et vérifier les explications avec des faits.",
+            "Traiter les causes à l'origine du problème et suivre le résultat dans le temps.",
           ],
           details: [
             {
-              heading: "Lien avec les autres standards",
+              heading: "Lien avec les autres fiches",
               items: [
-                "Entrée, les défauts chroniques rendus visibles par Defect Visualization.",
-                "Sortie, des causes racines traitées et des apprentissages partagés avec l'équipe.",
+                "Point de départ : les anomalies fréquentes ou persistantes repérées dans « Suivi des anomalies ».",
+                "Résultat recherché : des causes traitées, une amélioration vérifiée dans le temps et des enseignements partagés avec l'équipe.",
               ],
             },
           ],
@@ -326,51 +308,52 @@ export const board = {
     },
   ],
 
-  /** Verso 1 */
+  /** Verso, panneau de gauche */
   errors: [
-    "L'équipe a réinventé le format et les standards visuels.",
-    "Le board est posé par terre ou loin de la table de l'équipe.",
-    "L'équipe a rempli les 8 feuilles séparément, sans vision d'ensemble.",
-    "Il y a un doublon digital, ce qui empêche l'équipe d'utiliser pleinement le board.",
+    "Modifier le format commun et ses repères visuels, au risque de rendre le tableau plus difficile à comprendre.",
+    "Placer le tableau au sol ou loin de l'équipe, ce qui limite son utilisation au quotidien.",
+    "Remplir les huit fiches séparément, sans relier les informations ni regarder le projet dans son ensemble.",
+    "Tenir un second tableau numérique en parallèle, au risque de disperser les informations et de moins utiliser le tableau commun.",
   ],
 
-  /** Verso 2 */
-  misconceptions: [
-    {
-      misconception: "Il faut le remplir pour faire du reporting au management",
-      reframe: "Le management a d'autres outils pour le reporting, comme le kanban des promesses",
-    },
-    {
-      misconception: "C'est un outil pour toute l'équipe",
-      reframe:
-        "Toute l'équipe est amenée à le remplir, mais c'est d'abord un outil pour le lead PM et le tech lead",
-    },
-    {
-      misconception: "C'est un outil pour organiser le quotidien",
-      reframe:
-        "C'est un outil de prise de recul sur les problèmes qui pourraient nous empêcher de tenir la promesse",
-    },
-    {
-      misconception: "C'est l'outil que j'utilise pour communiquer au client",
-      reframe:
-        "C'est un outil interne. Selon la maturité du client, on peut le partager, en sachant qu'il n'a pas vocation à suivre nos problèmes de fonctionnement",
-    },
-    {
-      misconception: "Remplir le board, c'est fait pour être facile",
-      reframe:
-        "Remplir le board pose des questions difficiles à l'équipe, parce qu'il lui demande de regarder le projet avec 15 ans d'expérience supplémentaires",
-    },
-    {
-      misconception: "C'est un outil qui permet aux managers de prendre des décisions sur le projet",
-      reframe:
-        "C'est un outil qui montre ce que le tech lead et le lead PM ont encore à apprendre pour décider de manière autonome",
-    },
-  ],
-
-  /** Repères affichés dans le panneau d'accueil */
+  /** Verso, encadré en pied du panneau de gauche */
   goodBoard: [
-    "Il n'est pas surchargé, il reste lisible et va droit au but.",
-    "Il fait ressortir visuellement les 2 ou 3 problèmes principaux du projet.",
-    "Il est vivant, l'équipe partage ses émotions dessus, un meme, un emoji, un dessin.",
+    "Il reste lisible et se concentre sur l'essentiel.",
+    "Les deux ou trois principaux problèmes du projet se repèrent immédiatement.",
+    "Il reflète la vie de l'équipe : un dessin, un emoji ou une image peuvent exprimer un ressenti.",
+  ],
+
+  /** Verso, panneau de droite */
+  usage: [
+    {
+      question: "Comment ce tableau s'articule-t-il avec les autres suivis ?",
+      answer:
+        "Il aide l'équipe à comprendre les difficultés et à choisir les actions à mener. Le suivi destiné à la direction dispose de ses propres supports pour présenter les engagements et leurs résultats.",
+    },
+    {
+      question: "Qui le renseigne et l'utilise ?",
+      answer:
+        "Toute l'équipe contribue. Les responsables produit et technique s'en servent en priorité pour analyser la situation et orienter les décisions.",
+    },
+    {
+      question: "Comment aide-t-il à piloter le projet ?",
+      answer:
+        "Il permet de prendre du recul sur les difficultés qui pourraient compromettre les fonctionnalités prévues, la qualité, les délais ou le budget. Il complète les outils d'organisation du travail quotidien.",
+    },
+    {
+      question: "Qu'est-ce qui est partagé avec vous ?",
+      answer:
+        "Le tableau sert d'abord au travail interne de l'équipe. Les éléments utiles à votre compréhension du projet et à vos décisions peuvent être partagés lors de nos échanges.",
+    },
+    {
+      question: "Pourquoi certaines fiches demandent-elles un travail d'analyse ?",
+      answer:
+        "Les renseigner oblige l'équipe à vérifier ses hypothèses, à expliquer les écarts et à préciser ce qu'elle doit encore comprendre. Ce travail l'aide à anticiper les difficultés.",
+    },
+    {
+      question: "Qui prend les décisions à partir de ce tableau ?",
+      answer:
+        "Il aide les responsables produit et technique à décider à partir de faits et à identifier les sujets sur lesquels ils ont besoin d'aide. Leurs responsables peuvent s'appuyer sur ces éléments pour les accompagner.",
+    },
   ],
 };

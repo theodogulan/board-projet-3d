@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Board projet, visualisateur 3D</title>
-<meta name="description" content="Le Board projet Theodo présenté comme un objet 3D manipulable, avec les 4 piliers du Lean Tech Manifesto et leurs 8 standards.">
+<title>Tableau de pilotage du projet</title>
+<meta name="description" content="Le tableau de pilotage du projet présenté comme un objet 3D manipulable, avec ses quatre thèmes et ses huit fiches.">
 <link rel="stylesheet" href="styles.css">
 <script type="importmap">
 {
@@ -18,10 +18,10 @@
 <body>
 
 <!-- Scène 3D -->
-<canvas id="scene" aria-label="Board projet en trois dimensions" role="img"></canvas>
+<canvas id="scene" aria-label="Tableau de pilotage du projet en trois dimensions" role="img"></canvas>
 
 <!-- Cibles clavier, une par feuille, injectées par main.js -->
-<div id="a11y-targets" class="a11y-targets" role="group" aria-label="Les 8 standards du board"></div>
+<div id="a11y-targets" class="a11y-targets" role="group" aria-label="Les huit fiches du tableau"></div>
 
 <header class="topbar">
   <div class="topbar__title">
@@ -31,9 +31,9 @@
       <rect x="34.64" y="36.20" width="23.17" height="8.85" fill="currentColor" />
       <circle cx="72.92" cy="73.70" r="5.99" fill="currentColor" />
     </svg>
-    <span>Board projet</span>
+    <span>Tableau de pilotage du projet</span>
   </div>
-  <p class="topbar__hint" id="hint">Faites tourner le board, cliquez sur une feuille</p>
+  <p class="topbar__hint" id="hint">Faites tourner le tableau, puis sélectionnez une fiche pour en savoir plus.</p>
 </header>
 
 <!-- Infobulle de survol -->
@@ -41,30 +41,35 @@
 
 <!-- Barre d'outils -->
 <nav class="toolbar" aria-label="Contrôles de la vue">
-  <button type="button" class="toolbar__btn" data-action="reset" title="Réinitialiser la vue">
-    <span class="toolbar__icon" aria-hidden="true">⟲</span><span class="toolbar__label">Réinitialiser</span>
+  <button type="button" class="toolbar__btn" data-action="reset"
+          title="Revenir à la vue de départ" aria-label="Revenir à la vue de départ">
+    <span class="toolbar__icon" aria-hidden="true">⟲</span><span class="toolbar__label">Revenir à la vue de départ</span>
   </button>
-  <button type="button" class="toolbar__btn is-active" data-action="front" aria-pressed="true" title="Voir le recto">
-    <span class="toolbar__icon" aria-hidden="true">▣</span><span class="toolbar__label">Recto</span>
+  <button type="button" class="toolbar__btn is-active" data-action="front" aria-pressed="true"
+          title="Voir les fiches" aria-label="Voir les fiches">
+    <span class="toolbar__icon" aria-hidden="true">▣</span><span class="toolbar__label">Voir les fiches</span>
   </button>
-  <button type="button" class="toolbar__btn" data-action="back" aria-pressed="false" title="Voir le verso">
-    <span class="toolbar__icon" aria-hidden="true">▤</span><span class="toolbar__label">Verso</span>
+  <button type="button" class="toolbar__btn" data-action="back" aria-pressed="false"
+          title="Voir le mode d'emploi" aria-label="Voir le mode d'emploi">
+    <span class="toolbar__icon" aria-hidden="true">▤</span><span class="toolbar__label">Voir le mode d'emploi</span>
   </button>
-  <button type="button" class="toolbar__btn" data-action="autorotate" aria-pressed="false" title="Rotation automatique">
-    <span class="toolbar__icon" aria-hidden="true">◐</span><span class="toolbar__label">Rotation</span>
+  <button type="button" class="toolbar__btn" data-action="autorotate" aria-pressed="false"
+          title="Rotation du tableau" aria-label="Rotation du tableau">
+    <span class="toolbar__icon" aria-hidden="true">◐</span><span class="toolbar__label">Rotation du tableau</span>
   </button>
-  <button type="button" class="toolbar__btn" data-action="fullscreen" aria-pressed="false" title="Plein écran">
+  <button type="button" class="toolbar__btn" data-action="fullscreen" aria-pressed="false"
+          title="Plein écran" aria-label="Plein écran">
     <span class="toolbar__icon" aria-hidden="true">⛶</span><span class="toolbar__label">Plein écran</span>
   </button>
 </nav>
 
 <!-- Panneau latéral, bottom sheet sur mobile -->
-<aside id="panel" class="panel" aria-live="polite" aria-label="Détail du standard" hidden>
+<aside id="panel" class="panel" aria-live="polite" aria-label="Détail de la fiche" hidden>
   <div class="panel__grip" aria-hidden="true"></div>
-  <button type="button" class="panel__close" data-action="close" aria-label="Retour au board">✕</button>
+  <button type="button" class="panel__close" data-action="close" aria-label="Fermer la fiche et revenir au tableau">✕</button>
   <div class="panel__scroll" id="panel-scroll"></div>
   <div class="panel__footer">
-    <button type="button" class="btn btn--ghost" data-action="close">Retour au board</button>
+    <button type="button" class="btn btn--ghost" data-action="close">Retour au tableau</button>
   </div>
 </aside>
 

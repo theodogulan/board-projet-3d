@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
-   Board projet, visualisateur 3D
+   Tableau de pilotage du projet, visualisateur 3D
    Three.js en ESM via importmap. Aucun build, aucun asset binaire.
    Le contenu textuel vit dans content.js.
    ------------------------------------------------------------------ */
@@ -285,9 +285,9 @@ function makeSheetTexture({ title, pillar, bullets, accentColor, cadence, worldW
   ctx.font = `500 ${bulletMm * s}px ${FONT}`;
   const textX = M + 9 * s;
   const maxW = W - M - textX;
+  // 6 lignes au maximum, et on s'arrête net si le bas de la fiche est atteint
   const bottom = H - M * 0.8;
-  // Nombre de lignes qui tiennent réellement sous le filet, 6 au maximum
-  let lineBudget = Math.max(1, Math.min(6, Math.floor((bottom - y + lineH) / (lineH + 1.7 * s))));
+  let lineBudget = 6;
 
   for (const bullet of bullets) {
     if (lineBudget <= 0 || y > bottom) break;
@@ -462,7 +462,7 @@ function makeBackTexture() {
   ctx.textAlign = "left";
   ctx.fillStyle = "#fff";
   ctx.font = `700 ${m(0.021)}px ${FONT}`;
-  ctx.fillText("Intention", pad + m(0.022), pad + m(0.024));
+  ctx.fillText("À quoi sert ce tableau ?", pad + m(0.022), pad + m(0.024));
   ctx.font = `500 ${m(0.0155)}px ${FONT}`;
   ctx.fillStyle = "rgba(255,255,255,.86)";
   let iy = pad + m(0.055);
@@ -491,53 +491,79 @@ function makeBackTexture() {
     draw(x + m(0.026), panelY + m(0.078), panelW - m(0.052));
   };
 
-  panel(pad, "Erreurs types", (x, y, w) => {
+  panel(pad, "Points de vigilance", (x, y, w) => {
+    const available = panelY + panelH - m(0.02) - y;
+    const textW = w - m(0.024);
+
+    /* Ajustement automatique : on cherche le plus grand corps de texte qui
+       fasse tenir les points de vigilance et l'encadré dans le panneau.
+       Ajouter une ligne dans content.js réduit simplement la taille. */
+    let fit = null;
+    for (const size of [0.0185, 0.0172, 0.016, 0.0149, 0.0138, 0.0128, 0.0118]) {
+      const goodSize = size * 0.89;
+      ctx.font = `500 ${m(size)}px ${FONT}`;
+      const errs = board.errors.map((e) => wrapLines(ctx, e, textW, 4));
+      ctx.font = `500 ${m(goodSize)}px ${FONT}`;
+      const goods = board.goodBoard.map((g) => wrapLines(ctx, g, textW, 3));
+
+      const total =
+        errs.reduce((sum, l) => sum + l.length * size * 1.4 + size * 0.95, 0) +
+        size * 3.2 + // filet et intertitre de l'encadré
+        goods.reduce((sum, l) => sum + l.length * goodSize * 1.4 + goodSize * 0.6, 0);
+
+      if (m(total) <= available || size === 0.0118) {
+        fit = { size, goodSize, errs, goods };
+        break;
+      }
+    }
+
     ctx.textAlign = "left";
-    ctx.font = `500 ${m(0.0185)}px ${FONT}`;
     let cy = y + m(0.012);
-    board.errors.forEach((err) => {
+
+    ctx.font = `500 ${m(fit.size)}px ${FONT}`;
+    fit.errs.forEach((lines) => {
       ctx.fillStyle = PALETTE.orange;
       ctx.beginPath();
       ctx.arc(x + m(0.006), cy - m(0.005), m(0.0045), 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = "#2c313b";
-      for (const line of wrapLines(ctx, err, w - m(0.024), 3)) {
+      lines.forEach((line) => {
         ctx.fillText(line, x + m(0.022), cy);
-        cy += m(0.026);
-      }
-      cy += m(0.018);
+        cy += m(fit.size * 1.4);
+      });
+      cy += m(fit.size * 0.95);
     });
 
-    // Repères d'un bon board, en pied de panneau
-    cy += m(0.008);
+    // Encadré des signes d'un tableau utile
+    cy += m(fit.size * 0.6);
     ctx.strokeStyle = PALETTE.line;
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(x, cy - m(0.012));
-    ctx.lineTo(x + w, cy - m(0.012));
+    ctx.moveTo(x, cy - m(fit.size * 0.7));
+    ctx.lineTo(x + w, cy - m(fit.size * 0.7));
     ctx.stroke();
-    cy += m(0.014);
     ctx.fillStyle = PALETTE.inkFaint;
-    ctx.font = `700 ${m(0.014)}px ${FONT}`;
-    ctx.fillText("UN BON BOARD RESSEMBLE À", x, cy);
-    cy += m(0.028);
-    ctx.font = `500 ${m(0.0165)}px ${FONT}`;
-    board.goodBoard.forEach((item) => {
+    ctx.font = `700 ${m(fit.size * 0.76)}px ${FONT}`;
+    ctx.fillText("LES SIGNES D'UN TABLEAU UTILE", x, cy);
+    cy += m(fit.size * 1.6);
+
+    ctx.font = `500 ${m(fit.goodSize)}px ${FONT}`;
+    fit.goods.forEach((lines) => {
       ctx.fillStyle = PALETTE.orange;
       ctx.beginPath();
       ctx.arc(x + m(0.006), cy - m(0.005), m(0.004), 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = PALETTE.inkSoft;
-      for (const line of wrapLines(ctx, item, w - m(0.024), 2)) {
+      lines.forEach((line) => {
         ctx.fillText(line, x + m(0.022), cy);
-        cy += m(0.023);
-      }
-      cy += m(0.01);
+        cy += m(fit.goodSize * 1.4);
+      });
+      cy += m(fit.goodSize * 0.6);
     });
   });
 
-  panel(pad + panelW + gap, "Misconceptions et reframes", (x, y, w) => {
-    const colW = [w * 0.38, w * 0.62];
+  panel(pad + panelW + gap, "Comprendre son utilisation", (x, y, w) => {
+    const colW = [w * 0.42, w * 0.58];
     const available = panelY + panelH - m(0.018) - y;
 
     /* Ajustement automatique : on cherche le plus grand corps de texte
@@ -546,9 +572,9 @@ function makeBackTexture() {
     let fontMm = 0.0145, lineH = 0.0195, rowGap = 0.021, rows = null;
     for (const size of [0.0145, 0.0135, 0.0125, 0.0118, 0.011, 0.0103, 0.0096]) {
       ctx.font = `500 ${m(size)}px ${FONT}`;
-      const candidate = board.misconceptions.map((row) => ({
-        left: wrapLines(ctx, row.misconception, colW[0] - m(0.012), 5),
-        right: wrapLines(ctx, row.reframe, colW[1] - m(0.012), 5),
+      const candidate = board.usage.map((row) => ({
+        left: wrapLines(ctx, row.question, colW[0] - m(0.012), 5),
+        right: wrapLines(ctx, row.answer, colW[1] - m(0.012), 5),
       }));
       const lh = size * 1.36;
       const gapRow = size * 1.45;
@@ -564,8 +590,8 @@ function makeBackTexture() {
     ctx.textAlign = "left";
     ctx.font = `700 ${m(0.0122)}px ${FONT}`;
     ctx.fillStyle = PALETTE.inkFaint;
-    ctx.fillText("MISCONCEPTION", x, y);
-    ctx.fillText("REFRAME", x + colW[0] + m(0.012), y);
+    ctx.fillText("QUESTION", x, y);
+    ctx.fillText("RÉPONSE", x + colW[0] + m(0.012), y);
 
     let cy = y + m(0.024);
     ctx.font = `500 ${m(fontMm)}px ${FONT}`;
@@ -851,7 +877,7 @@ function buildBoard() {
       const local = rectToLocal(rect);
 
       const texture = makeSheetTexture({
-        title: standard.boardTitle || standard.title,
+        title: standard.boardTitle,
         pillar: pillar.label,
         bullets: standard.bullets || [],
         accentColor: pillar.color,
@@ -1121,7 +1147,7 @@ function setHovered(entry) {
   if (entry) {
     tooltip.hidden = false;
     tooltip.innerHTML =
-      `<span class="tooltip__pillar">${entry.pillar.label}</span>${entry.standard.boardTitle || entry.standard.title}`;
+      `<span class="tooltip__pillar">${entry.pillar.label}</span>${entry.standard.boardTitle}`;
   } else {
     tooltip.hidden = true;
   }
@@ -1200,23 +1226,22 @@ function renderPanel(entry) {
   let html = `<span class="p-eyebrow">${esc(pillar.label)}</span>`;
   html += `<h2 class="p-title">${esc(standard.boardTitle || standard.title)}</h2>`;
 
-  const sub = [];
-  if (standard.title && standard.title !== standard.boardTitle) sub.push(`Standard Notion, ${esc(standard.title)}`);
-  html += `<p class="p-sub">${sub.join(" ") || "Standard Theodo Academy"}`;
+  html += `<p class="p-sub">Guide de l'équipe`;
   if (standard.cadence) html += `<span class="p-cadence">${esc(standard.cadence)}</span>`;
   html += `</p>`;
 
+  html += `<p class="p-h">À quoi sert cette fiche ?</p>`;
   html += `<p class="p-intent">${esc(standard.intent)}</p>`;
   if (standard.note) html += `<p class="p-note">${esc(standard.note)}</p>`;
 
   if (pillar.objectives && pillar.objectives.length) {
-    html += `<p class="p-h">Objectif du pilier</p><ul class="p-list">`;
+    html += `<p class="p-h">À quoi sert ce thème ?</p><ul class="p-list">`;
     html += pillar.objectives.map((o) => `<li>${esc(o)}</li>`).join("");
     html += `</ul>`;
   }
 
   if (standard.bullets && standard.bullets.length) {
-    html += `<p class="p-h">Sur la feuille</p><ul class="p-list">`;
+    html += `<p class="p-h">Sur la fiche</p><ul class="p-list">`;
     html += standard.bullets.map((b) => `<li>${esc(b)}</li>`).join("");
     html += `</ul>`;
   }
@@ -1225,10 +1250,6 @@ function renderPanel(entry) {
     html += `<p class="p-h">${esc(section.heading)}</p><ul class="p-list">`;
     html += section.items.map((i) => `<li>${esc(i)}</li>`).join("");
     html += `</ul>`;
-  }
-
-  if (standard.notionUrl) {
-    html += `<a class="btn btn--link" href="${esc(standard.notionUrl)}" target="_blank" rel="noopener noreferrer">Ouvrir le standard dans Notion</a>`;
   }
 
   panelScroll.innerHTML = html;
@@ -1297,7 +1318,7 @@ function buildA11yTargets() {
     btn.type = "button";
     btn.className = "a11y-target";
     btn.dataset.sheet = entry.id;
-    btn.textContent = `${entry.standard.boardTitle || entry.standard.title}, pilier ${entry.pillar.label}`;
+    btn.textContent = `${entry.standard.boardTitle}, thème : ${entry.pillar.label}`;
     btn.addEventListener("focus", () => {
       state.focused = entry;
       markInteraction();
@@ -1494,15 +1515,17 @@ function loop(now) {
 function renderFallback(reason) {
   const el = document.getElementById("fallback");
   let html = `<h1>${esc(board.title)}</h1>`;
-  html += `<p class="fb-note">${esc(reason)} Voici le même contenu en version lisible.</p>`;
-  html += `<p><strong>Intention.</strong> ${esc(board.intention)}</p>`;
+  html += `<p class="fb-note">${esc(reason)}</p>`;
+  html += `<h2>À quoi sert ce tableau ?</h2>`;
+  html += `<p>${esc(board.intention)}</p>`;
   html += `<p>${esc(board.subtitle)}</p>`;
+  html += `<h2>Les quatre thèmes du projet</h2>`;
 
   for (const pillar of board.pillars) {
     html += `<h2>${esc(pillar.label)}</h2>`;
     html += `<ul>${pillar.objectives.map((o) => `<li>${esc(o)}</li>`).join("")}</ul>`;
     for (const s of pillar.standards) {
-      html += `<h3>${esc(s.boardTitle || s.title)}${s.cadence ? ` (${esc(s.cadence)})` : ""}</h3>`;
+      html += `<h3>${esc(s.boardTitle)}${s.cadence ? ` (${esc(s.cadence)})` : ""}</h3>`;
       html += `<p>${esc(s.intent)}</p>`;
       if (s.note) html += `<p><em>${esc(s.note)}</em></p>`;
       html += `<ul>${(s.bullets || []).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
@@ -1510,15 +1533,14 @@ function renderFallback(reason) {
         html += `<p><strong>${esc(d.heading)}</strong></p>`;
         html += `<ul>${d.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>`;
       }
-      if (s.notionUrl) html += `<p><a href="${esc(s.notionUrl)}">Ouvrir le standard dans Notion</a></p>`;
     }
   }
 
-  html += `<h2>Erreurs types</h2><ul>${board.errors.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>`;
-  html += `<h2>Misconceptions et reframes</h2><table><thead><tr><th>Misconception</th><th>Reframe</th></tr></thead><tbody>`;
-  html += board.misconceptions.map((r) => `<tr><td>${esc(r.misconception)}</td><td>${esc(r.reframe)}</td></tr>`).join("");
+  html += `<h2>Points de vigilance</h2><ul>${board.errors.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>`;
+  html += `<h2>Les signes d'un tableau utile</h2><ul>${board.goodBoard.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>`;
+  html += `<h2>Comprendre son utilisation</h2><table><thead><tr><th>Question</th><th>Réponse</th></tr></thead><tbody>`;
+  html += board.usage.map((r) => `<tr><td>${esc(r.question)}</td><td>${esc(r.answer)}</td></tr>`).join("");
   html += `</tbody></table>`;
-  html += `<h2>Un bon board ressemble à</h2><ul>${board.goodBoard.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>`;
 
   el.innerHTML = html;
   el.hidden = false;
@@ -1532,8 +1554,8 @@ function init() {
   const forced = new URLSearchParams(location.search).has("fallback");
   if (forced || !supportsWebGL()) {
     renderFallback(forced
-      ? "Version statique, affichée à la demande."
-      : "WebGL n'est pas disponible sur ce navigateur.");
+      ? "Vous consultez la version texte du tableau. Toutes les fiches sont disponibles ci-dessous."
+      : "Votre navigateur ne peut pas afficher le tableau en 3D. Retrouvez ci-dessous toutes les fiches en version texte.");
     return;
   }
 
@@ -1543,7 +1565,7 @@ function init() {
     buildBoard();
   } catch (error) {
     console.error(error);
-    renderFallback("Le rendu 3D n'a pas pu démarrer.");
+    renderFallback("Le tableau en 3D n'a pas pu démarrer. Retrouvez ci-dessous toutes les fiches en version texte.");
     return;
   }
 

@@ -122,15 +122,17 @@ body.is-fallback { overflow: auto; }
 
 /* --------------------------------------------------------------- Toolbar */
 
+/* Barre horizontale sous l'objet. Les libellés étant longs, une colonne
+   à droite recouvrirait le tableau. */
 .toolbar {
   position: fixed;
   z-index: 4;
-  top: 50%;
-  right: 24px;
-  transform: translateY(-50%);
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  gap: 2px;
   padding: 6px;
   background: rgba(255, 255, 255, .86);
   backdrop-filter: blur(14px);
@@ -141,15 +143,17 @@ body.is-fallback { overflow: auto; }
   transition: transform .45s var(--ease), opacity .3s var(--ease);
 }
 
-/* Le panneau occupe la droite, la barre passe à gauche */
-body.is-panel-open .toolbar { left: 24px; right: auto; }
+/* Le panneau occupe la droite, la barre se recentre sur la zone libre */
+body.is-panel-open .toolbar {
+  transform: translateX(-50%) translateX(calc(var(--panel-w) / -2));
+}
 
 .toolbar__btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 9px 12px;
+  gap: 9px;
+  padding: 9px 13px;
+  white-space: nowrap;
   border: 0;
   border-radius: 9px;
   background: transparent;
@@ -404,21 +408,19 @@ body.is-panel-open .panel { transform: translateX(0); }
 
 /* ------------------------------------------------------------- Responsive */
 
+@media (max-width: 1040px) {
+  .toolbar__label { display: none; }
+  .toolbar__btn { padding: 11px 13px; }
+  .toolbar__icon { font-size: 16px; width: 20px; }
+}
+
 @media (max-width: 860px) {
   :root { --panel-w: 100%; }
 
   .topbar { padding: 14px 16px; }
   .topbar__hint { display: none; }
 
-  .toolbar {
-    top: auto;
-    bottom: calc(12px + env(safe-area-inset-bottom));
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    flex-direction: row;
-    gap: 2px;
-  }
+  .toolbar { bottom: calc(12px + env(safe-area-inset-bottom)); }
 
   body.is-panel-open .toolbar {
     transform: translateX(-50%) translateY(200%);
@@ -426,9 +428,8 @@ body.is-panel-open .panel { transform: translateX(0); }
     pointer-events: none;
   }
 
-  .toolbar__btn { flex-direction: column; gap: 3px; padding: 8px 9px; }
-  .toolbar__label { font-size: 9.5px; white-space: nowrap; }
-  .toolbar__icon { font-size: 13px; }
+  /* Les libellés complets restent le nom accessible, via aria-label */
+  .toolbar__icon { font-size: 17px; }
 
   .panel {
     top: auto;
