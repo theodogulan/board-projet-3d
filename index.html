@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Board projet, visualisateur 3D</title>
+<meta name="description" content="Le Board projet Theodo présenté comme un objet 3D manipulable, avec les 4 piliers du Lean Tech Manifesto et leurs 8 standards.">
+<link rel="stylesheet" href="styles.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- Scène 3D -->
+<canvas id="scene" aria-label="Board projet en trois dimensions" role="img"></canvas>
+
+<!-- Cibles clavier, une par feuille, injectées par main.js -->
+<div id="a11y-targets" class="a11y-targets" role="group" aria-label="Les 8 standards du board"></div>
+
+<header class="topbar">
+  <div class="topbar__title">
+    <span class="topbar__logo" aria-hidden="true">t.</span>
+    <span>Board projet</span>
+  </div>
+  <p class="topbar__hint" id="hint">Faites tourner le board, cliquez sur une feuille</p>
+</header>
+
+<!-- Infobulle de survol -->
+<div id="tooltip" class="tooltip" role="presentation" hidden></div>
+
+<!-- Barre d'outils -->
+<nav class="toolbar" aria-label="Contrôles de la vue">
+  <button type="button" class="toolbar__btn" data-action="reset" title="Réinitialiser la vue">
+    <span class="toolbar__icon" aria-hidden="true">⟲</span><span class="toolbar__label">Réinitialiser</span>
+  </button>
+  <button type="button" class="toolbar__btn is-active" data-action="front" aria-pressed="true" title="Voir le recto">
+    <span class="toolbar__icon" aria-hidden="true">▣</span><span class="toolbar__label">Recto</span>
+  </button>
+  <button type="button" class="toolbar__btn" data-action="back" aria-pressed="false" title="Voir le verso">
+    <span class="toolbar__icon" aria-hidden="true">▤</span><span class="toolbar__label">Verso</span>
+  </button>
+  <button type="button" class="toolbar__btn" data-action="autorotate" aria-pressed="false" title="Rotation automatique">
+    <span class="toolbar__icon" aria-hidden="true">◐</span><span class="toolbar__label">Rotation</span>
+  </button>
+  <button type="button" class="toolbar__btn" data-action="fullscreen" aria-pressed="false" title="Plein écran">
+    <span class="toolbar__icon" aria-hidden="true">⛶</span><span class="toolbar__label">Plein écran</span>
+  </button>
+</nav>
+
+<!-- Panneau latéral, bottom sheet sur mobile -->
+<aside id="panel" class="panel" aria-live="polite" aria-label="Détail du standard" hidden>
+  <div class="panel__grip" aria-hidden="true"></div>
+  <button type="button" class="panel__close" data-action="close" aria-label="Retour au board">✕</button>
+  <div class="panel__scroll" id="panel-scroll"></div>
+  <div class="panel__footer">
+    <button type="button" class="btn btn--ghost" data-action="close">Retour au board</button>
+  </div>
+</aside>
+
+<!-- Repli sans WebGL, rempli par main.js à partir de content.js -->
+<main id="fallback" class="fallback" hidden></main>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
