@@ -226,23 +226,37 @@ body.is-panel-open .panel { transform: translateX(0); }
 .p-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin: 0 0 14px;
-  padding: 5px 11px 5px 8px;
+  flex-wrap: wrap;
+  gap: 1px 10px;
+  margin: 0 0 16px;
+  padding: 6px 12px 6px 9px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--accent) 12%, transparent);
   color: var(--accent);
   font-size: 11px;
-  font-weight: 650;
-  letter-spacing: .04em;
-  text-transform: uppercase;
+  line-height: 1.35;
 }
 
 .p-eyebrow::before {
   content: "";
+  flex: none;
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--accent);
+}
+
+/* Intitulé d'origine du thème */
+.p-eyebrow__en {
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+/* Traduction française, à côté sur les panneaux larges,
+   à la ligne quand la place manque */
+.p-eyebrow__fr {
+  font-weight: 550;
+  opacity: .72;
 }
 
 .p-title {

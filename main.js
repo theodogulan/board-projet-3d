@@ -1208,7 +1208,13 @@ function renderPanel(entry) {
   const { standard, pillar } = entry;
   panelEl.style.setProperty("--accent", pillar.color);
 
-  let html = `<span class="p-eyebrow">${esc(pillar.label)}</span>`;
+  // Intitulé d'origine du thème, puis sa traduction française
+  let html = `<span class="p-eyebrow">`;
+  html += `<span class="p-eyebrow__en">${esc(pillar.bannerLabel || pillar.label)}</span>`;
+  if (pillar.bannerLabel && pillar.bannerLabel !== pillar.label) {
+    html += `<span class="p-eyebrow__fr">${esc(pillar.label)}</span>`;
+  }
+  html += `</span>`;
   html += `<h2 class="p-title">${esc(standard.boardTitle || standard.title)}</h2>`;
 
   html += `<p class="p-sub">Guide de l'équipe`;
@@ -1264,11 +1270,6 @@ function bindToolbar() {
     if (!btn) return;
     const action = btn.dataset.action;
     markInteraction();
-    if (action === "reset") {
-      clearSelection();
-      state.idle = true; // on retrouve la vue de repos, oscillation comprise
-      goHome();
-    }
     if (action === "front") { clearSelection(); goSide("front"); }
     if (action === "back") { clearSelection(); goSide("back"); }
     if (action === "close") clearSelection();
