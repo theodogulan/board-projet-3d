@@ -41,6 +41,12 @@ export const board = {
 
   /**
    * Les 4 thèmes du tableau.
+   *
+   * `bannerLabel` est l'intitulé imprimé sur le bandeau orange du recto. Il
+   * reprend le tableau physique, donc les termes du Lean Tech Manifesto.
+   * `label` est le nom français du thème, utilisé partout ailleurs dans
+   * l'interface, infobulle, panneau, navigation clavier et version texte.
+   *
    * `color` sert uniquement d'accent d'interaction, survol, focus et panneau.
    * Les bandeaux imprimés restent orange, comme l'objet physique.
    */
@@ -48,6 +54,7 @@ export const board = {
     {
       id: "value",
       label: "Comprendre vos besoins",
+      bannerLabel: "Value for the Customer",
       color: "#3E7BFA",
       objectives: [
         "Comprendre ce qui compte pour vous et pour les utilisateurs, afin de concentrer les efforts sur les améliorations les plus utiles.",
@@ -121,6 +128,7 @@ export const board = {
     {
       id: "rft-jit",
       label: "Livrer avec fiabilité",
+      bannerLabel: "Right-first-time and Just-in-time",
       color: "#1FA97A",
       objectives: [
         "Suivre ce qui avance, détecter les retards et les anomalies, et faciliter le travail entre les équipes pour livrer au rythme prévu avec la qualité attendue.",
@@ -205,6 +213,7 @@ export const board = {
     {
       id: "network-of-teams",
       label: "Faciliter le travail technique",
+      bannerLabel: "Tech-enabled Network of Teams",
       color: "#F0803C",
       objectives: [
         "Vérifier que l'équipe dispose des outils et des conditions nécessaires pour développer, vérifier et mettre en ligne le produit efficacement.",
@@ -253,6 +262,7 @@ export const board = {
     {
       id: "learning-organization",
       label: "Résoudre les problèmes",
+      bannerLabel: "Building a Learning Organization",
       color: "#8B5CF6",
       objectives: [
         "Comprendre les difficultés rencontrées, suivre les actions décidées et partager ce que l'équipe apprend pour améliorer durablement la qualité et les délais.",

@@ -426,7 +426,8 @@ function makeFrontTexture(rects) {
     ctx.fillStyle = "#fff";
     ctx.font = `700 ${bh * 0.44}px ${FONT}`;
     ctx.textAlign = "center";
-    ctx.fillText(pillar.label, bx + bw / 2, by + bh / 2 + bh * 0.02);
+    // Intitulé imprimé du tableau physique, à défaut le nom du thème
+    ctx.fillText(pillar.bannerLabel || pillar.label, bx + bw / 2, by + bh / 2 + bh * 0.02);
   }
 
   /* Ombres portées des feuilles, cuites dans le fond */

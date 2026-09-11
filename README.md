@@ -53,7 +53,7 @@ Tout vit dans `content.js`, exporté en un objet unique `board`.
 export const board = {
   title, intention, subtitle,
   header: { promise, team, spa },
-  pillars: [{ id, label, color, objectives: [], standards: [] }],
+  pillars: [{ id, label, bannerLabel, color, objectives: [], standards: [] }],
   errors: [],      // verso, panneau Points de vigilance
   goodBoard: [],   // verso, encadré Les signes d'un tableau utile
   usage: [{ question, answer }], // verso, panneau Comprendre son utilisation
@@ -148,6 +148,17 @@ En tête de `main.js` :
 | `PALETTE` | Couleurs du panneau, des bandeaux et des étiquettes |
 | `LAYOUT` | Grille du recto, hauteurs de bandeaux, gouttières |
 | `IDLE_DELAY` | Délai d'inactivité avant la rotation automatique, 8 s |
+
+### Deux intitulés par thème
+
+| Champ | Où il apparaît |
+|---|---|
+| `bannerLabel` | Bandeau orange du recto uniquement. Reprend l'intitulé du tableau physique, donc les termes du Lean Tech Manifesto |
+| `label` | Partout ailleurs : pastille des fiches, infobulle, panneau latéral, navigation clavier, version texte sans WebGL |
+
+Si `bannerLabel` est absent, le bandeau affiche `label`. Pour aligner aussi la
+pastille des fiches sur l'intitulé imprimé, passez `pillar.bannerLabel` au lieu
+de `pillar.label` dans l'appel à `makeSheetTexture`, section 8 de `main.js`.
 
 Les couleurs de thème, définies dans `content.js`, ne servent qu'à
 l'interaction : liseré au survol, accent du panneau, anneau de focus. Les
