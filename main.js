@@ -441,9 +441,12 @@ function makeBackTexture() {
   ctx.fillRect(0, 0, W, H);
   ctx.textBaseline = "middle";
 
-  /* En-tête, intention du board */
+  /* En-tête, intention du tableau. Sa hauteur suit le nombre de lignes. */
   const pad = m(0.024);
-  const headH = m(0.118);
+  ctx.font = `500 ${m(0.0155)}px ${FONT}`;
+  const introLines = wrapLines(ctx, board.intention, W - 2 * pad - m(0.044), 5);
+  const headH = m(0.055) + (introLines.length - 1) * m(0.022) + m(0.024);
+
   ctx.fillStyle = PALETTE.navy;
   ctx.fillRect(pad, pad, W - 2 * pad, headH);
   ctx.textAlign = "left";
@@ -453,14 +456,15 @@ function makeBackTexture() {
   ctx.font = `500 ${m(0.0155)}px ${FONT}`;
   ctx.fillStyle = "rgba(255,255,255,.86)";
   let iy = pad + m(0.055);
-  for (const line of wrapLines(ctx, board.intention, W - 2 * pad - m(0.044), 3)) {
+  for (const line of introLines) {
     ctx.fillText(line, pad + m(0.022), iy);
     iy += m(0.022);
   }
 
-  /* Deux panneaux */
+  /* Deux panneaux, ils occupent la place restante jusqu'au pied de page */
+  const footTop = m(0.708);
   const panelY = pad + headH + m(0.022);
-  const panelH = m(0.52);
+  const panelH = footTop - m(0.024) - panelY;
   const gap = m(0.024);
   const panelW = (W - 2 * pad - gap) / 2;
 
@@ -601,7 +605,7 @@ function makeBackTexture() {
   ctx.textAlign = "center";
   ctx.fillStyle = "rgba(255,255,255,.42)";
   ctx.font = `500 ${m(0.0155)}px ${FONT}`;
-  let footY = panelY + panelH + m(0.026);
+  let footY = footTop + m(0.006);
   for (const line of wrapLines(ctx, board.subtitle, W - 2 * pad - m(0.24), 2)) {
     ctx.fillText(line, W / 2, footY);
     footY += m(0.022);

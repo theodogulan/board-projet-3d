@@ -13,7 +13,7 @@ export const board = {
   title: "Tableau de pilotage du projet",
 
   intention:
-    "Ce tableau aide notre équipe à suivre vos priorités, l'avancement du projet et la qualité du produit. Il permet de repérer les difficultés tôt et de décider des actions nécessaires pour tenir nos engagements.",
+    "Ce tableau aide notre équipe à suivre vos priorités, l'avancement du projet et la qualité du produit. Il permet de repérer les difficultés tôt et de décider des actions nécessaires pour tenir nos engagements. Il se base sur la méthodologie Lean Tech\u00ae de Theodo ainsi que sur 15 ans d'expérience sur des projets digitaux.",
 
   subtitle: "Repérer les risques, résoudre les problèmes et tenir nos engagements.",
 
