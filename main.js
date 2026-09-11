@@ -153,6 +153,53 @@ function softShadow(ctx, x, y, w, h, blur, alpha, dy = 0) {
   ctx.restore();
 }
 
+/**
+ * Logo Theodo, tracé vectoriel officiel.
+ * Une hampe qui se recourbe vers la droite, une barre à droite de la hampe,
+ * un point séparé. Coordonnées normalisées sur la boîte d'encre du signe.
+ */
+const LOGO = {
+  stemX: 0.3971, stemW: 0.1016, top: 0.2031,
+  arcY: 0.5182, arcR: 0.2070, arcCX: 0.6042,
+  barX: 0.3464, barY: 0.3620, barW: 0.2317, barH: 0.0885,
+  dotX: 0.7292, dotY: 0.7370, dotR: 0.0599,
+  inkX: 0.3464, inkY: 0.2031, inkW: 0.4427, inkH: 0.5938,
+};
+
+/** Largeur du logo pour une hauteur donnée. */
+function logoWidth(height) {
+  return (LOGO.inkW / LOGO.inkH) * height;
+}
+
+/** Dessine le logo, coin haut gauche de la boîte d'encre en x, y. */
+function drawTheodoLogo(ctx, x, y, height, color) {
+  const k = height / LOGO.inkH;
+  ctx.save();
+  ctx.translate(x - LOGO.inkX * k, y - LOGO.inkY * k);
+  ctx.scale(k, k);
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = LOGO.stemW;
+  ctx.lineCap = "butt";
+
+  // Hampe puis crochet
+  ctx.beginPath();
+  ctx.moveTo(LOGO.stemX, LOGO.top);
+  ctx.lineTo(LOGO.stemX, LOGO.arcY);
+  ctx.arc(LOGO.arcCX, LOGO.arcY, LOGO.arcR, Math.PI, Math.PI / 2, true);
+  ctx.stroke();
+
+  // Barre
+  ctx.fillRect(LOGO.barX, LOGO.barY, LOGO.barW, LOGO.barH);
+
+  // Point
+  ctx.beginPath();
+  ctx.arc(LOGO.dotX, LOGO.dotY, LOGO.dotR, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
 /* ============================================================ 3. TEXTURE D'UNE FEUILLE */
 
 /**
@@ -177,33 +224,31 @@ function makeSheetTexture({ title, pillar, bullets, accentColor, cadence, worldW
   ctx.fillRect(0, 0, W, H);
 
   const M = 15 * s;
+  const bandH = 11 * s;
   ctx.textBaseline = "alphabetic";
 
-  // Logo Theodo et badge de cadence, en haut à droite
-  ctx.textAlign = "right";
-  ctx.fillStyle = PALETTE.orange;
-  ctx.font = `800 ${11 * s}px ${FONT}`;
-  ctx.fillText("t.", W - M, M + 10 * s);
+  // Bandeau de tête, cadence à gauche et logo Theodo à droite.
+  // Le titre passe dessous, il ne peut donc jamais les chevaucher.
+  drawTheodoLogo(ctx, W - M - logoWidth(bandH), M, bandH, PALETTE.orange);
 
   if (cadence) {
     ctx.font = `600 ${6.4 * s}px ${FONT}`;
-    const bw = ctx.measureText(cadence).width + 14 * s;
-    const bx = W - M - 20 * s - bw;
+    ctx.textAlign = "center";
+    const bw = ctx.measureText(cadence).width + 15 * s;
     ctx.fillStyle = "#f1f3f7";
-    roundRect(ctx, bx, M + 1.5 * s, bw, 10.5 * s, 5.2 * s);
+    roundRect(ctx, M, M + 0.5 * s, bw, 10.5 * s, 5.2 * s);
     ctx.fill();
     ctx.fillStyle = PALETTE.inkSoft;
-    ctx.textAlign = "center";
-    ctx.fillText("\u21bb  " + cadence, bx + bw / 2, M + 9 * s);
+    ctx.fillText("\u21bb  " + cadence, M + bw / 2, M + 8 * s);
   }
 
-  // Titre
+  // Titre, sous le bandeau de tête
   ctx.textAlign = "center";
   ctx.fillStyle = PALETTE.orange;
   const titleMm = title.length > 24 ? 14.5 : 17;
   ctx.font = `700 ${titleMm * s}px ${FONT}`;
-  const titleLines = wrapLines(ctx, title, W - 2 * M - 46 * s, 2);
-  let y = M + (titleMm + 3) * s;
+  const titleLines = wrapLines(ctx, title, W - 2 * M, 2);
+  let y = M + bandH + (titleMm + 2) * s;
   for (const line of titleLines) {
     ctx.fillText(line, W / 2, y);
     y += titleMm * 1.12 * s;
@@ -854,7 +899,7 @@ function buildBoard() {
   return rects;
 }
 
-/** Aimant, post-it corné, marqueur aimanté. Discrets. */
+/** Aimant et post-it corné. Discrets, ils donnent vie à l'objet. */
 function addDetails(rects) {
   // Aimant, coin haut droit de la face
   const magnet = new THREE.Mesh(
@@ -908,24 +953,6 @@ function addDetails(rects) {
     boardBody.add(postIt);
   }
 
-  // Marqueur aimanté, dans la gouttière entre les deux colonnes
-  const marker = new THREE.Group();
-  const body = new THREE.Mesh(
-    new THREE.CapsuleGeometry(0.0065, 0.082, 4, 16),
-    new THREE.MeshStandardMaterial({ color: "#1d2129", roughness: 0.4, metalness: 0.1 })
-  );
-  const cap = new THREE.Mesh(
-    new THREE.CapsuleGeometry(0.0068, 0.02, 4, 16),
-    new THREE.MeshStandardMaterial({ color: PALETTE.orange, roughness: 0.35 })
-  );
-  cap.position.y = -0.052;
-  marker.add(body, cap);
-  marker.castShadow = true;
-  body.castShadow = true;
-  cap.castShadow = true;
-  const gutterX = (LAYOUT.cols.l.x + LAYOUT.cols.l.w + LAYOUT.cols.r.x) / 2;
-  marker.position.set(gutterX - FACE_W / 2, FACE_H / 2 - 0.30, Z_DETAIL + 0.004);
-  boardBody.add(marker);
 }
 
 /* ============================================================ 9. CADRAGE ET VUES */

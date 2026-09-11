@@ -10,8 +10,12 @@
  * "Ouvrir le standard dans Notion" réapparaît dans le panneau.
  *
  * Les intentions des standards sont reprises du bloc "Intent" de chaque page
- * Notion Theodo Academy. Les titres imprimés sur les feuilles (boardTitle)
- * reprennent le libellé physique du board, qui diffère parfois du titre Notion.
+ * Notion Theodo Academy.
+ *
+ * `boardTitle` est le titre imprimé sur la feuille, traduit en français.
+ * `title` reste le titre officiel du standard dans Notion, en anglais, et
+ * s'affiche dans le panneau quand il diffère. Ne traduisez pas `title`, c'est
+ * lui qui fait le lien avec la source.
  */
 
 export const board = {
@@ -93,7 +97,7 @@ export const board = {
         },
         {
           id: "product-architecture",
-          boardTitle: "Product Architecture",
+          boardTitle: "Architecture produit",
           title: "Product architecture",
           cadence: "Monthly",
           intent:
@@ -134,7 +138,7 @@ export const board = {
       standards: [
         {
           id: "user-stories-takt",
-          boardTitle: "User Stories Takt",
+          boardTitle: "Takt des user stories",
           title: "Daily Mail",
           cadence: "Daily",
           note:
@@ -162,7 +166,7 @@ export const board = {
         },
         {
           id: "defects-visualization",
-          boardTitle: "Defects Visualization",
+          boardTitle: "Visualisation des défauts",
           title: "Defect Visualization",
           cadence: "Weekly",
           intent:
@@ -222,7 +226,7 @@ export const board = {
       standards: [
         {
           id: "tech-working-conditions",
-          boardTitle: "Tech Working Conditions",
+          boardTitle: "Conditions de travail techniques",
           title: "Tech Working Conditions",
           intent:
             "Engager l'équipe à maintenir le bon environnement de travail technique pour être efficace sur toute la boucle d'ingénierie, Build, Observe et Ship.",
@@ -272,7 +276,7 @@ export const board = {
       standards: [
         {
           id: "dantotsu",
-          boardTitle: "Dantotsu and Problem solving",
+          boardTitle: "Dantotsu et résolution de problèmes",
           title: "Dantotsu and Problem Solving",
           intent:
             "Utiliser les petits problèmes du quotidien pour renforcer la connaissance de l'équipe sur les conditions qui permettent une meilleure qualité et un delivery plus rapide.",
@@ -297,7 +301,7 @@ export const board = {
         },
         {
           id: "weak-point-management",
-          boardTitle: "Weak Point Management",
+          boardTitle: "Gestion des points faibles",
           title: "Weak Point Management",
           intent:
             "Détecter les points faibles récurrents issus de Defect Visualization, comprendre pourquoi les défauts persistent malgré les contre-mesures, et traiter les causes racines en répétant la question pourquoi, jusqu'à ce que le défaut ne réapparaisse plus.",

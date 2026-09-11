@@ -62,7 +62,7 @@ export const board = {
 | Champ | Usage |
 |---|---|
 | `id` | Identifiant unique, sert à placer la feuille sur le board. Obligatoire |
-| `boardTitle` | Titre imprimé sur la feuille, comme sur le board physique |
+| `boardTitle` | Titre imprimé sur la feuille, en français. Ne correspond pas toujours au nom Notion |
 | `title` | Titre exact de la page Notion, affiché dans le panneau s'il diffère |
 | `cadence` | Badge de rythme sur la feuille, `Daily`, `Weekly`, `Monthly`. Facultatif |
 | `intent` | Bloc Intent du standard. Affiché en exergue dans le panneau |
