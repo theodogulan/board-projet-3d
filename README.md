@@ -147,18 +147,18 @@ En tête de `main.js` :
 | `SHEET_LIFT` | Hauteur de soulèvement d'une fiche au survol |
 | `PALETTE` | Couleurs du panneau, des bandeaux et des étiquettes |
 | `LAYOUT` | Grille du recto, hauteurs de bandeaux, gouttières |
-| `IDLE_DELAY` | Délai d'inactivité avant la rotation automatique, 8 s |
+| `IDLE_DELAY` | Délai d'inactivité avant la rotation de présentation, 8 s. La rotation s'arrête au premier geste |
 
 ### Deux intitulés par thème
 
 | Champ | Où il apparaît |
 |---|---|
 | `bannerLabel` | Bandeau orange du recto uniquement. Reprend l'intitulé du tableau physique, donc les termes du Lean Tech Manifesto |
-| `label` | Partout ailleurs : pastille des fiches, infobulle, panneau latéral, navigation clavier, version texte sans WebGL |
+| `label` | Partout ailleurs : infobulle, panneau latéral, navigation clavier, version texte sans WebGL |
 
-Si `bannerLabel` est absent, le bandeau affiche `label`. Pour aligner aussi la
-pastille des fiches sur l'intitulé imprimé, passez `pillar.bannerLabel` au lieu
-de `pillar.label` dans l'appel à `makeSheetTexture`, section 8 de `main.js`.
+Si `bannerLabel` est absent, le bandeau affiche `label`. Les fiches elles-mêmes
+ne portent pas le nom du thème, c'est le bandeau qui le donne. La couleur du
+thème ne sert plus que d'accent, puces de la fiche et interface.
 
 Les couleurs de thème, définies dans `content.js`, ne servent qu'à
 l'interaction : liseré au survol, accent du panneau, anneau de focus. Les
@@ -174,6 +174,11 @@ bandeaux imprimés restent orange, comme sur le tableau physique.
 | Ouvrir | Clic ou touche Entrée, la caméra cadre la fiche en 700 ms et le panneau s'ouvre |
 | Revenir | Bouton Retour au tableau, touche Échap, ou clic dans le vide |
 | Naviguer au clavier | Tab entre les 8 fiches, Entrée pour ouvrir. Le focus est dessiné sur la fiche en 3D |
+
+La barre d'outils compte trois boutons, revenir à la vue de départ, voir les
+fiches, voir le mode d'emploi. Les libellés complets apparaissent au dessus de
+1040 pixels de large, en dessous seules les icônes restent, le libellé servant
+de nom accessible.
 
 ## Choix techniques à connaître
 

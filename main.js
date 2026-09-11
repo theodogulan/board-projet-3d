@@ -212,7 +212,7 @@ function drawTheodoLogo(ctx, x, y, height, color) {
  * Gère le word-wrap, la hiérarchie typographique et la pastille du pilier.
  * 6 lignes de puces au maximum, le détail va dans le panneau HTML.
  */
-function makeSheetTexture({ title, pillar, bullets, accentColor, cadence, worldWidth = 0.2065 }) {
+function makeSheetTexture({ title, bullets, accentColor, cadence, worldWidth = 0.2065 }) {
   const mmW = worldWidth * 1000;
   const mmH = mmW / LAYOUT.aspect;
   const W = Math.round(THREE.MathUtils.clamp(mmW * 7, 512, 2400));
@@ -254,23 +254,8 @@ function makeSheetTexture({ title, pillar, bullets, accentColor, cadence, worldW
     y += titleMm * 1.12 * s;
   }
 
-  // Pastille du pilier
-  y += 4 * s;
-  ctx.font = `650 ${6.6 * s}px ${FONT}`;
-  const pillarLabel = pillar.toUpperCase();
-  const pw = ctx.measureText(pillarLabel).width;
-  const dot = 4.4 * s;
-  const px = W / 2 - (pw + dot + 4 * s) / 2;
-  ctx.fillStyle = accentColor;
-  ctx.beginPath();
-  ctx.arc(px + dot / 2, y - 2.2 * s, dot / 2, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.textAlign = "left";
-  ctx.fillStyle = PALETTE.inkFaint;
-  ctx.fillText(pillarLabel, px + dot + 4 * s, y);
-
   // Filet de séparation
-  y += 9 * s;
+  y += 11 * s;
   ctx.strokeStyle = PALETTE.line;
   ctx.lineWidth = Math.max(1, 0.5 * s);
   ctx.beginPath();
@@ -279,6 +264,7 @@ function makeSheetTexture({ title, pillar, bullets, accentColor, cadence, worldW
   ctx.stroke();
 
   // Puces, 6 lignes au maximum
+  ctx.textAlign = "left";
   const bulletMm = 9.4;
   const lineH = bulletMm * 1.32 * s;
   y += (bulletMm + 6) * s;
@@ -709,7 +695,6 @@ const state = {
   side: "front",
   idle: true,
   lastInteraction: performance.now(),
-  autoRotateBlocked: false,
   needsRender: true,
   anim: null,
 };
@@ -879,7 +864,6 @@ function buildBoard() {
 
       const texture = makeSheetTexture({
         title: standard.boardTitle,
-        pillar: pillar.label,
         bullets: standard.bullets || [],
         accentColor: pillar.color,
         cadence: standard.cadence,
@@ -1114,7 +1098,6 @@ function markPointerActivity() {
   state.lastInteraction = performance.now();
   if (controls && controls.autoRotate) {
     controls.autoRotate = false;
-    syncToolbar();
     invalidate();
   }
 }
@@ -1125,10 +1108,7 @@ function markInteraction() {
     state.idle = false;
     invalidate();
   }
-  if (controls && controls.autoRotate) {
-    controls.autoRotate = false;
-    syncToolbar();
-  }
+  if (controls && controls.autoRotate) controls.autoRotate = false;
   hint.classList.add("is-hidden");
 }
 
@@ -1267,9 +1247,7 @@ function syncToolbar() {
     let active = false;
     if (action === "front") active = state.side === "front";
     if (action === "back") active = state.side === "back";
-    if (action === "autorotate") active = !!(controls && controls.autoRotate);
-    if (action === "fullscreen") active = !!document.fullscreenElement;
-    if (["front", "back", "autorotate", "fullscreen"].includes(action)) {
+    if (action === "front" || action === "back") {
       btn.setAttribute("aria-pressed", String(active));
     }
     btn.classList.toggle("is-active", active);
@@ -1284,27 +1262,14 @@ function bindToolbar() {
     markInteraction();
     if (action === "reset") {
       clearSelection();
-      state.autoRotateBlocked = false;
       state.idle = true; // on retrouve la vue de repos, oscillation comprise
       goHome();
     }
     if (action === "front") { clearSelection(); goSide("front"); }
     if (action === "back") { clearSelection(); goSide("back"); }
-    if (action === "autorotate") {
-      controls.autoRotate = !controls.autoRotate;
-      // Une coupure manuelle ne doit pas être annulée par le minuteur d'inactivité
-      state.autoRotateBlocked = !controls.autoRotate;
-      syncToolbar();
-      invalidate();
-    }
-    if (action === "fullscreen") {
-      if (document.fullscreenElement) document.exitFullscreen();
-      else document.documentElement.requestFullscreen?.();
-    }
     if (action === "close") clearSelection();
   });
 
-  document.addEventListener("fullscreenchange", syncToolbar);
 }
 
 /* ============================================================ 13. ACCESSIBILITÉ CLAVIER */
@@ -1497,10 +1462,9 @@ function loop(now) {
   }
 
   // Rotation automatique après inactivité
-  if (!controls.autoRotate && !state.autoRotateBlocked && !state.selected &&
-      now - state.lastInteraction > IDLE_DELAY) {
+  // Rotation de présentation après une longue inactivité, coupée au premier geste
+  if (!controls.autoRotate && !state.selected && now - state.lastInteraction > IDLE_DELAY) {
     controls.autoRotate = true;
-    syncToolbar();
     dirty = true;
   }
 
