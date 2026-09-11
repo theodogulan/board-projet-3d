@@ -461,10 +461,9 @@ function makeBackTexture() {
     iy += m(0.022);
   }
 
-  /* Deux panneaux, ils occupent la place restante jusqu'au pied de page */
-  const footTop = m(0.708);
+  /* Deux panneaux, ils occupent toute la place restante */
   const panelY = pad + headH + m(0.022);
-  const panelH = footTop - m(0.024) - panelY;
+  const panelH = m(0.756) - panelY;
   const gap = m(0.024);
   const panelW = (W - 2 * pad - gap) / 2;
 
@@ -600,16 +599,6 @@ function makeBackTexture() {
       cy += Math.max(row.left.length, row.right.length) * m(lineH) + m(rowGap);
     });
   });
-
-  /* Pied de page */
-  ctx.textAlign = "center";
-  ctx.fillStyle = "rgba(255,255,255,.42)";
-  ctx.font = `500 ${m(0.0155)}px ${FONT}`;
-  let footY = footTop + m(0.006);
-  for (const line of wrapLines(ctx, board.subtitle, W - 2 * pad - m(0.24), 2)) {
-    ctx.fillText(line, W / 2, footY);
-    footY += m(0.022);
-  }
 
   return toTexture(canvas);
 }
